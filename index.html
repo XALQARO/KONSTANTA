@@ -6,7 +6,7 @@
 <title>ПРОТОКОЛ КОНСТАНТЫ (2112)</title>
   <link rel="icon" type="image/png" href="favicon.png">
 <style>
-  /* Анимация загрузки "Константа" */
+  /* Загрузочная анимация Константы */
   #loader {
     position: fixed;
     top: 0;
@@ -28,12 +28,12 @@
     background: #f44336;
     border-radius: 50%;
     box-shadow: 0 0 15px #f44336, 0 0 40px #f44336;
-    animation: pulse 0.8s ease-in-out infinite alternate;
+    animation: appearDot 0.6s ease-out forwards;
   }
 
-  @keyframes pulse {
-    from { transform: scale(1); opacity: 0.8; }
-    to { transform: scale(1.5); opacity: 1; }
+  @keyframes appearDot {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   #loader .line {
@@ -45,49 +45,70 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: lineExpand 1.2s ease-out forwards;
-    animation-delay: 0.8s;
+    opacity: 0;
+    animation: lineExpand 0.8s ease-out forwards;
+    animation-delay: 0.6s;
   }
 
   @keyframes lineExpand {
-    from { width: 0; opacity: 1; }
-    to { width: 100vw; opacity: 1; }
+    0% { width: 0; opacity: 1; }
+    100% { width: 100vw; opacity: 1; }
   }
 
   #loader .curtain {
     position: absolute;
-    left: 0;
     width: 100%;
-    height: 50%;
+    height: 0;
     background: #000;
+    left: 0;
     transform-origin: center;
   }
 
   #loader .curtain.top {
-    top: 0;
+    top: 50%;
     animation: curtainUp 1s ease-in-out forwards;
-    animation-delay: 1.8s;
+    animation-delay: 1.4s;
   }
 
   #loader .curtain.bottom {
-    bottom: 0;
+    bottom: 50%;
     animation: curtainDown 1s ease-in-out forwards;
-    animation-delay: 1.8s;
+    animation-delay: 1.4s;
   }
 
   @keyframes curtainUp {
-    from { height: 50%; }
-    to { height: 0; }
+    0% { height: 0; top: 50%; }
+    100% { height: 50%; top: 0; }
   }
 
   @keyframes curtainDown {
-    from { height: 50%; }
-    to { height: 0; }
+    0% { height: 0; bottom: 50%; }
+    100% { height: 50%; bottom: 0; }
+  }
+
+  #loader .curtain.top.hide {
+    animation: curtainHideUp 1s ease-in-out forwards;
+    animation-delay: 2.2s;
+  }
+
+  #loader .curtain.bottom.hide {
+    animation: curtainHideDown 1s ease-in-out forwards;
+    animation-delay: 2.2s;
+  }
+
+  @keyframes curtainHideUp {
+    0% { height: 50%; }
+    100% { height: 0; }
+  }
+
+  @keyframes curtainHideDown {
+    0% { height: 50%; }
+    100% { height: 0; }
   }
 
   body.loaded #loader {
-    animation: fadeOut 0.6s ease-in forwards;
-    animation-delay: 2.6s;
+    animation: fadeOut 0.8s ease-out forwards;
+    animation-delay: 3.0s;
   }
 
   @keyframes fadeOut {
@@ -158,6 +179,7 @@
   <div class="curtain top"></div>
   <div class="curtain bottom"></div>
 </div>
+
 
 <header>
   <img src="K.png" alt="Эмблема Константы">
@@ -396,15 +418,28 @@
 <footer>
   <h2>ПОРЯДОК — ПОСЛЕДНЯЯ ФОРМА ЖИЗНИ</h2>
 </footer>
+  
       <script>
   window.addEventListener("load", () => {
-    document.body.classList.add("loaded");
+    const topCurtain = document.querySelector(".curtain.top");
+    const bottomCurtain = document.querySelector(".curtain.bottom");
+
+    // Запуск последовательной анимации
     setTimeout(() => {
+      topCurtain.classList.add("hide");
+      bottomCurtain.classList.add("hide");
+    }, 2200);
+
+    // Удаление загрузчика после завершения
+    setTimeout(() => {
+      document.body.classList.add("loaded");
       document.getElementById("loader").remove();
     }, 3200);
   });
 </script>
+
 </body>
 </html>
+
 
 
