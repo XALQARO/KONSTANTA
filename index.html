@@ -4,188 +4,127 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ПРОТОКОЛ КОНСТАНТЫ (2112)</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
-  /* Загрузочная анимация Константы */
-  #loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap');
 
-  #loader .dot {
-    position: relative;
-    width: 6px;
-    height: 6px;
-    background: #f44336;
-    border-radius: 50%;
-    box-shadow: 0 0 15px #f44336, 0 0 40px #f44336;
-    animation: appearDot 0.6s ease-out forwards;
-  }
+body {
+  background:#1a1a1a;
+  color:#e0e0e0;
+  font-family:'Roboto Condensed',sans-serif;
+  margin:0;padding:0;line-height:1.8;
+  overflow:hidden; /* чтобы не прокручивалось во время анимации */
+}
 
-  @keyframes appearDot {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
+/* === ЛОАДЕР === */
+#loader {
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  z-index:9999;
+}
 
-  #loader .line {
-    position: absolute;
-    height: 2px;
-    width: 0;
-    background: #f44336;
-    box-shadow: 0 0 25px #f44336, 0 0 60px #b00;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    animation: lineExpand 0.8s ease-out forwards;
-    animation-delay: 0.6s;
-  }
+/* точка */
+#loader .dot {
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:8px;height:8px;
+  background:#f44336;
+  border-radius:50%;
+  box-shadow:0 0 15px #f44336,0 0 30px #b00;
+  opacity:0;
+  animation:dotShow .4s ease-out forwards .2s;
+}
+@keyframes dotShow {
+  from{opacity:0;transform:translate(-50%,-50%) scale(0);}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1);}
+}
 
-  @keyframes lineExpand {
-    0% { width: 0; opacity: 1; }
-    100% { width: 100vw; opacity: 1; }
-  }
+/* линия */
+#loader .line {
+  position:absolute;
+  top:50%;left:50%;
+  height:2px;width:0;
+  background:#f44336;
+  box-shadow:0 0 20px #f44336,0 0 40px #b00;
+  transform:translate(-50%,-50%);
+  opacity:0;
+  animation:lineGrow 1s ease-out forwards .6s;
+}
+@keyframes lineGrow {
+  0%{width:0;opacity:1;}
+  100%{width:100vw;opacity:1;}
+}
 
-  #loader .curtain {
-    position: absolute;
-    width: 100%;
-    height: 0;
-    background: #000;
-    left: 0;
-    transform-origin: center;
-  }
+/* панели, из которых потом шторка */
+#loader .panel {
+  position:absolute;
+  left:0;width:100%;height:0;
+  background:#000;
+  transform-origin:center;
+  opacity:1;
+}
+#loader .panel.top {top:50%;}
+#loader .panel.bottom {bottom:50%;}
 
-  #loader .curtain.top {
-    top: 50%;
-    animation: curtainUp 1s ease-in-out forwards;
-    animation-delay: 1.4s;
-  }
+/* движение панелей вверх/вниз */
+#loader.reveal .panel.top {
+  animation:panelUp 1.2s ease-in-out forwards;
+}
+#loader.reveal .panel.bottom {
+  animation:panelDown 1.2s ease-in-out forwards;
+}
+@keyframes panelUp {
+  0%{height:0;}
+  100%{top:0;height:50%;}
+}
+@keyframes panelDown {
+  0%{height:0;}
+  100%{bottom:0;height:50%;}
+}
 
-  #loader .curtain.bottom {
-    bottom: 50%;
-    animation: curtainDown 1s ease-in-out forwards;
-    animation-delay: 1.4s;
-  }
+/* исчезновение шторок */
+#loader.hide {
+  animation:fadeOut .6s ease forwards;
+}
+@keyframes fadeOut {
+  to{opacity:0;visibility:hidden;}
+}
 
-  @keyframes curtainUp {
-    0% { height: 0; top: 50%; }
-    100% { height: 50%; top: 0; }
-  }
-
-  @keyframes curtainDown {
-    0% { height: 0; bottom: 50%; }
-    100% { height: 50%; bottom: 0; }
-  }
-
-  #loader .curtain.top.hide {
-    animation: curtainHideUp 1s ease-in-out forwards;
-    animation-delay: 2.2s;
-  }
-
-  #loader .curtain.bottom.hide {
-    animation: curtainHideDown 1s ease-in-out forwards;
-    animation-delay: 2.2s;
-  }
-
-  @keyframes curtainHideUp {
-    0% { height: 50%; }
-    100% { height: 0; }
-  }
-
-  @keyframes curtainHideDown {
-    0% { height: 50%; }
-    100% { height: 0; }
-  }
-
-  body.loaded #loader {
-    animation: fadeOut 0.8s ease-out forwards;
-    animation-delay: 3.0s;
-  }
-
-  @keyframes fadeOut {
-    to { opacity: 0; visibility: hidden; }
-  }
-
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap');
-  body {
-    background-color: #1a1a1a;
-    color: #e0e0e0;
-    font-family: 'Roboto Condensed', sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.8;
-  }
-  header {
-    text-align: center;
-    padding: 40px 20px;
-    border-bottom: 2px solid #333;
-  }
-  header img {
-    width: 200px;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 0 10px #b00);
-  }
-  h1, h2, h3 {
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase;
-    color: #f44336;
-    letter-spacing: 1px;
-  }
-  h1 {
-    font-size: 2.2em;
-  }
-  section {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-  article {
-    margin-bottom: 50px;
-  }
-  p, li {
-    font-size: 1.05em;
-    color: #d0d0d0;
-  }
-  blockquote {
-    font-style: italic;
-    color: #ccc;
-    border-left: 3px solid #f44336;
-    padding-left: 15px;
-    margin: 20px 0;
-  }
-  footer {
-    text-align: center;
-    padding: 50px;
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase;
-    color: #f44336;
-    border-top: 1px solid #333;
-  }
+/* === КОНТЕНТ === */
+header{text-align:center;padding:40px 20px;border-bottom:2px solid #333;}
+header img{width:200px;margin-bottom:20px;filter:drop-shadow(0 0 10px #b00);}
+h1,h2,h3{font-family:'Orbitron',sans-serif;text-transform:uppercase;color:#f44336;letter-spacing:1px;}
+h1{font-size:2.2em;}
+section{max-width:900px;margin:40px auto;padding:0 20px;}
+article{margin-bottom:50px;}
+p,li{font-size:1.05em;color:#d0d0d0;}
+blockquote{font-style:italic;color:#ccc;border-left:3px solid #f44336;padding-left:15px;margin:20px 0;}
+footer{text-align:center;padding:50px;font-family:'Orbitron',sans-serif;text-transform:uppercase;color:#f44336;border-top:1px solid #333;}
 </style>
 </head>
+
 <body>
+<!-- ЛОАДЕР -->
 <div id="loader">
   <div class="dot"></div>
   <div class="line"></div>
-  <div class="curtain top"></div>
-  <div class="curtain bottom"></div>
+  <div class="panel top"></div>
+  <div class="panel bottom"></div>
 </div>
 
-
+<!-- КОНТЕНТ -->
 <header>
   <img src="K.png" alt="Эмблема Константы">
   <h1>КОНСТАНТА</h1>
   <p><strong>КОД. КОНТРОЛЬ. КОНСТАНТА.</strong></p>
 </header>
+
 <section>
 
   <article>
@@ -418,28 +357,19 @@
 <footer>
   <h2>ПОРЯДОК — ПОСЛЕДНЯЯ ФОРМА ЖИЗНИ</h2>
 </footer>
-  
-      <script>
-  window.addEventListener("load", () => {
-    const topCurtain = document.querySelector(".curtain.top");
-    const bottomCurtain = document.querySelector(".curtain.bottom");
 
-    // Запуск последовательной анимации
-    setTimeout(() => {
-      topCurtain.classList.add("hide");
-      bottomCurtain.classList.add("hide");
-    }, 2200);
+<script>
+window.addEventListener("load", ()=>{
+  const loader=document.getElementById("loader");
 
-    // Удаление загрузчика после завершения
-    setTimeout(() => {
-      document.body.classList.add("loaded");
-      document.getElementById("loader").remove();
-    }, 3200);
-  });
+  // панели начинают раздвигаться
+  setTimeout(()=>{loader.classList.add("reveal");},1600);
+
+  // убираем лоадер после раскрытия
+  setTimeout(()=>{loader.classList.add("hide");document.body.style.overflow="auto";},3100);
+
+  setTimeout(()=>{loader.remove();},3700);
+});
 </script>
-
 </body>
 </html>
-
-
-
