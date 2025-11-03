@@ -7,6 +7,28 @@
   <link rel="icon" type="image/png" href="favicon.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap');
+  <style>
+  /* ДОПОЛНИТЕЛЬНЫЙ ПАРАЛЛАКС-СТИЛЬ */
+  .parallax-section {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+  article {
+    position: relative;
+    transition: transform 0.2s ease-out;
+  }
+  h2, h3, blockquote {
+    transition: transform 0.3s ease-out, opacity 0.4s;
+  }
+  h2.parallax, h3.parallax {
+    will-change: transform, opacity;
+  }
+  blockquote.parallax {
+    will-change: transform, opacity;
+    opacity: 0.9;
+  }
+</style>
+
   body {
     background-color: #1a1a1a;
     color: #e0e0e0;
@@ -302,5 +324,28 @@
   <h2>ПОРЯДОК — ПОСЛЕДНЯЯ ФОРМА ЖИЗНИ</h2>
 </footer>
 </body>
+  
+  <script>
+document.addEventListener("scroll", () => {
+  const scrollTop = window.scrollY;
+  const articles = document.querySelectorAll("article");
+  const headings = document.querySelectorAll("h2, h3, blockquote");
+
+  articles.forEach((el, i) => {
+    const speed = 0.15 + i * 0.02;
+    el.style.transform = `translateY(${scrollTop * speed * -0.1}px)`;
+  });
+
+  headings.forEach((el, i) => {
+    const speed = 0.25 + i * 0.03;
+    const offset = scrollTop * speed * -0.08;
+    el.classList.add("parallax");
+    el.style.transform = `translateY(${offset}px)`;
+    el.style.opacity = 1 - Math.abs(offset) / 1200;
+  });
+});
+</script>
+
 </html>
+
 
